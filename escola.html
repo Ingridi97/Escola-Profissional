@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>Escola Profissional</title>
+    <link rel="stylesheet" href="escola.css"/>
+</head>
+<body>
+<h1>Escola Profissional</h1>
+
+<!-- Cadastro de Curso -->
+<section>
+    <h2>Cadastrar curso</h2>
+    <form id="cursoForm">
+        <input type="text" placeholder="Nome do Curso" id="cursoNome" required/>
+        <input type="number" placeholder="Carga Horária" id="cursoCarga" required/>
+        <input type="text" placeholder="Valor(R$)" id="cursoValor" required/>
+        <button type="submit">Cadastrar Curso</button>
+    </form>
+    <ul id="listaCursos"></ul>
+</section>
+
+<!-- Seleção de Curso -->
+<section>
+    <h2>Seleção de Curso</h2>
+    <form id="selecaoCursoForm">
+        <label for="cursoSelect">Escolha um curso:</label>
+        <select id="cursoSelect" required>
+            <option value="">Selecione um curso</option>
+        </select>
+        <button type="submit">Selecionar Curso</button>
+    </form>
+    <div id="detalhesCurso"></div> <!-- Área para mostrar detalhes do curso -->
+</section>
+
+<!-- Cadastro de Cliente -->
+<section>
+    <h2>Cadastro Cliente</h2>
+    <form id="clienteForm">
+        <input type="text" placeholder="Nome do Cliente" id="clienteNome" required/>
+        <input type="text" placeholder="CPF" id="clienteCPF" required/>
+        <button type="submit">Cadastrar Cliente</button>
+    </form>
+    <ul id="listarCliente"></ul>
+</section>
+
+<!-- Registrar Venda -->
+<section>
+    <h2>Vender Curso</h2>
+    <form id="vendaForm">
+        <!-- Selects para Cliente e Curso -->
+        <label for="clienteSelectVenda">Selecione um Cliente:</label>
+        <select id="clienteSelect" required></select>
+
+        <label for="cursoSelectVenda">Selecione um Curso:</label>
+        <select id="cursoSelect" required></select>
+
+        <button type="submit">Registrar Venda</button>
+    </form>
+    
+    <!-- Exibição do Cliente e Curso Selecionados -->
+    <div id="vendaDetalhes">
+        <p id="clienteVenda">Cliente: </p> <!-- Exibe o nome do cliente -->
+        <p id="cursoVenda">Curso: </p> <!-- Exibe o nome do curso -->
+    </div>
+
+    <ul id="listarVendas"></ul>
+</section>
+
+<script src="escola.js"></script>
+</body>
+</html>
