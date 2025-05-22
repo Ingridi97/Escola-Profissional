@@ -1,6 +1,6 @@
 /* Estilo Geral */
 body {
-    font-family: 'Arial', sans-serif; /* Ou use uma fonte mais moderna como 'Roboto' ou 'Open Sans' */
+    font-family: 'Arial', sans-serif;
     margin: 20px;
     background: #f9f9f9;
     color: #333;
@@ -126,7 +126,6 @@ footer {
 
 /* Responsividade */
 @media screen and (max-width: 768px) {
-    /* Ajusta o layout para telas menores */
     body {
         margin: 10px;
     }
@@ -134,28 +133,9 @@ footer {
     form {
         padding: 15px;
     }
-
-    input, select, button {
-        padding: 12px;
-    }
-
-    button {
-        font-size: 14px;
-    }
-
-    ul li {
-        font-size: 14px;
-        padding: 8px;
-    }
 }
 
-/* Melhorias no visual de erro */
-input.error, select.error {
-    border-color: #f44336;
-    box-shadow: 0 0 5px rgba(244, 67, 54, 0.5);
-}
-
-input.error:focus, select.error:focus {
-    border-color: #f44336;
-    box-shadow: 0 0 8px rgba(244, 67, 54, 0.5);
+/* Campo com erro */
+.error {
+    border-color: red !important;
 }
