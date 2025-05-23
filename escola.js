@@ -1,83 +1,61 @@
-const cursos = [];
-const clientes = [];
-const vendas = [];
+let cursos = JSON.parse(localStorage.getItem('cursos')) || [];
+let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+let vendas = JSON.parse(localStorage.getItem('vendas')) || [];
 
 document.addEventListener('DOMContentLoaded', () => {
     // Cadastro de Curso
     document.getElementById('cursoForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const nome = document.getElementById('cursoNome').value.trim();
-        const carga = document.getElementById('cursoCarga').value.trim();
-        const valor = document.getElementById('cursoValor').value.trim();
+        const carga = parseInt(document.getElementById('cursoCarga').value.trim(), 10);
+        const valor = parseFloat(document.getElementById('cursoValor').value.trim());
 
         if (cursos.some(curso => curso.nome.toLowerCase() === nome.toLowerCase())) {
             alert("Este curso já foi cadastrado.");
             return;
         }
 
-        const curso = { nome, carga, valor };
-        cursos.push(curso);
-
+        cursos.push({ nome, carga, valor });
+        salvarDados();
         atualizarSelecaoCursosDetalhe();
         atualizarCursosParaClientes();
-
-        document.getElementById('cursoNome').value = "";
-        document.getElementById('cursoCarga').value = "";
-        document.getElementById('cursoValor').value = "";
+        document.getElementById('cursoForm').reset();
     });
 
     // Cadastro de Cliente
     document.getElementById('clienteForm').addEventListener('submit', (e) => {
         e.preventDefault();
-
         const nome = document.getElementById('clienteNome').value.trim();
-        const cpf = document.getElementById('clienteCPF').value.trim();
+        const cpf = document.getElementById('clienteCPF').value.trim().replace(/\D/g, '');
         const cursoIndex = document.getElementById('cursoCliente').value;
 
-        const cpfLimpo = cpf.replace(/\D/g, '');
-        if (cpfLimpo.length === 0 || cpfLimpo.length > 14) {
+        if (!validarCPF(cpf)) {
             alert("CPF inválido.");
-            document.getElementById('clienteCPF').classList.add('error');
+            return;
+        }
+
+        if (clientes.some(c => c.cpf === cpf)) {
+            alert("Este CPF já está cadastrado.");
             return;
         }
 
         if (cursoIndex === "") {
             alert("Selecione um curso.");
-            document.getElementById('cursoCliente').classList.add('error');
             return;
         }
 
-        let cliente = clientes.find(c => c.cpf === cpf);
-
-        if (!cliente) {
-            cliente = { nome, cpf };
-            clientes.push(cliente);
-        }
-
-        // Adiciona venda com base no cadastro
         const cursoNome = cursos[cursoIndex].nome;
-        vendas.push({ cliente: nome, cpf, curso: cursoNome });
 
+        // Salvar o curso no cliente
+        const cliente = { nome, cpf, curso: cursoNome };
+        clientes.push(cliente);
+
+        salvarDados();
         atualizarSelecaoClientes();
-        atualizarVendas();
-
-        document.getElementById('clienteNome').value = "";
-        document.getElementById('clienteCPF').value = "";
-        document.getElementById('cursoCliente').value = "";
-        document.getElementById('clienteCPF').classList.remove('error');
-        document.getElementById('cursoCliente').classList.remove('error');
+        document.getElementById('clienteForm').reset();
     });
 
-    // Atualiza o select de clientes no form de venda
-    function atualizarSelecaoClientes() {
-        const selectCliente = document.getElementById('clienteSelect');
-        selectCliente.innerHTML = "<option value=''>Selecione um cliente</option>";
-        clientes.forEach((cliente, index) => {
-            selectCliente.innerHTML += `<option value="${index}">${cliente.nome}</option>`;
-        });
-    }
-
-    // Preencher automaticamente o curso do cliente mais recente
+    // Atualiza o curso automaticamente ao selecionar cliente na venda
     document.getElementById('clienteSelect').addEventListener('change', function () {
         const clienteIndex = this.value;
         const inputCurso = document.getElementById('cursoInputVenda');
@@ -88,58 +66,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const cliente = clientes[clienteIndex];
-        const ultimaVenda = vendas.slice().reverse().find(v => v.cpf === cliente.cpf);
-
-        inputCurso.value = ultimaVenda ? ultimaVenda.curso : "";
+        inputCurso.value = cliente.curso || "";
     });
 
     // Registrar Venda
     document.getElementById('vendaForm').addEventListener('submit', (e) => {
         e.preventDefault();
-
         const clienteIndex = document.getElementById('clienteSelect').value;
         const cursoNome = document.getElementById('cursoInputVenda').value;
 
-        if (clienteIndex === "") {
-            alert("Selecione um cliente.");
+        if (clienteIndex === "" || !cursoNome) {
+            alert("Cliente ou curso não selecionado.");
             return;
         }
 
         const cliente = clientes[clienteIndex];
+        vendas.push({ cliente: cliente.nome, cpf: cliente.cpf, curso: cursoNome });
+        salvarDados();
 
-        if (!cursoNome) {
-            alert("Curso do cliente não encontrado.");
-            return;
-        }
-
-        vendas.push({
-            cliente: cliente.nome,
-            cpf: cliente.cpf,
-            curso: cursoNome
-        });
-
-        atualizarVendas();
+        alert("Venda registrada com sucesso!");
         limparDetalhesVenda();
     });
 
-    // Limpar detalhes após registrar venda
-    function limparDetalhesVenda() {
-        document.getElementById('clienteVenda').innerText = 'Cliente: ';
-        document.getElementById('cursoVenda').innerText = 'Curso: ';
-        document.getElementById('clienteSelect').value = "";
-        document.getElementById('cursoInputVenda').value = "";
-    }
-
-    // Atualizar lista de vendas no HTML
-    function atualizarVendas() {
-        const listaVendas = document.getElementById('listarVendas');
-        listaVendas.innerHTML = "";
-        vendas.forEach(venda => {
-            listaVendas.innerHTML += `<li>${venda.cliente} comprou o curso ${venda.curso}</li>`;
-        });
-    }
-
-    // Exibir detalhes do curso selecionado
+    // Exibir detalhes do curso
     document.getElementById('cursoSelectDetalhe').addEventListener('change', function () {
         const cursoIndex = this.value;
         const curso = cursos[cursoIndex];
@@ -150,39 +99,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>Detalhes do Curso Selecionado:</h3>
                 <p><strong>Nome:</strong> ${curso.nome}</p>
                 <p><strong>Carga Horária:</strong> ${curso.carga} horas</p>
-                <p><strong>Valor:</strong> R$ ${curso.valor}</p>
+                <p><strong>Valor:</strong> R$ ${curso.valor.toFixed(2)}</p>
             `;
             detalhesCurso.style.display = 'block';
         } else {
             detalhesCurso.style.display = 'none';
-            detalhesCurso.innerHTML = "";
         }
     });
 
-    // Busca por CPF
+    // Buscar vendas por CPF
     document.getElementById('buscaCPFForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const cpfBusca = document.getElementById('cpfBusca').value.trim().replace(/\D/g, '');
         const resultadoBusca = document.getElementById('resultadoBusca');
         resultadoBusca.innerHTML = '';
+        resultadoBusca.style.display = 'none';
 
-        if (!cpfBusca) {
+        if (!validarCPF(cpfBusca)) {
             alert("Digite um CPF válido.");
             return;
         }
 
-        const vendasFiltradas = vendas.filter(v => v.cpf.replace(/\D/g, '') === cpfBusca);
+        const vendasFiltradas = vendas.filter(v => v.cpf === cpfBusca);
 
         if (vendasFiltradas.length === 0) {
-            resultadoBusca.innerHTML = `<li>Nenhuma venda encontrada para o CPF ${cpfBusca}.</li>`;
+            resultadoBusca.innerHTML = `<p>Nenhuma venda encontrada para o CPF informado.</p>`;
+            resultadoBusca.style.display = 'block';
             return;
         }
 
+        let html = '<h3>Vendas Encontradas:</h3>';
         vendasFiltradas.forEach(venda => {
-            resultadoBusca.innerHTML += `<li>Cliente: ${venda.cliente} - Curso: ${venda.curso}</li>`;
+            html += `
+                <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background: #fff;">
+                    <p><strong>Cliente:</strong> ${venda.cliente}</p>
+                    <p><strong>CPF:</strong> ${venda.cpf}</p>
+                    <p><strong>Curso:</strong> ${venda.curso}</p>
+                </div>
+            `;
         });
+
+        resultadoBusca.innerHTML = html;
+        resultadoBusca.style.display = 'block';
     });
 
+    // Funções auxiliares
     function atualizarSelecaoCursosDetalhe() {
         const selectCurso = document.getElementById('cursoSelectDetalhe');
         selectCurso.innerHTML = "<option value=''>Selecione um curso</option>";
@@ -199,8 +160,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function atualizarSelecaoClientes() {
+        const selectCliente = document.getElementById('clienteSelect');
+        selectCliente.innerHTML = "<option value=''>Selecione um cliente</option>";
+        clientes.forEach((cliente, index) => {
+            selectCliente.innerHTML += `<option value="${index}">${cliente.nome}</option>`;
+        });
+    }
+
+    function limparDetalhesVenda() {
+        document.getElementById('clienteSelect').value = "";
+        document.getElementById('cursoInputVenda').value = "";
+    }
+
+    function salvarDados() {
+        localStorage.setItem('cursos', JSON.stringify(cursos));
+        localStorage.setItem('clientes', JSON.stringify(clientes));
+        localStorage.setItem('vendas', JSON.stringify(vendas));
+    }
+
+    // Validação de CPF padrão brasileiro
+    function validarCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g, '');
+        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+        let soma = 0;
+        for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
+        let resto = 11 - (soma % 11);
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(cpf.charAt(9))) return false;
+
+        soma = 0;
+        for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
+        resto = 11 - (soma % 11);
+        if (resto === 10 || resto === 11) resto = 0;
+        return resto === parseInt(cpf.charAt(10));
+    }
+
+    // Inicializar selects com dados armazenados
     atualizarSelecaoCursosDetalhe();
     atualizarCursosParaClientes();
     atualizarSelecaoClientes();
-    atualizarVendas();
 });

@@ -59,13 +59,6 @@
 
             <button type="submit">Registrar Venda</button>
         </form>
-
-        <div id="vendaDetalhes">
-            <p id="clienteVenda">Cliente: </p>
-            <p id="cursoVenda">Curso: </p>
-        </div>
-
-        <ul id="listarVendas"></ul>
     </section>
 
     <!-- Buscar Vendas por CPF -->
@@ -75,7 +68,16 @@
             <input type="text" id="cpfBusca" placeholder="Digite o CPF do cliente" maxlength="14" required/>
             <button type="submit">Buscar</button>
         </form>
-        <ul id="resultadoBusca"></ul>
+        <div id="resultadoBusca" style="display:none;"></div>
+    </section>
+
+    <!-- Exclusão de Cliente por CPF -->
+    <section>
+        <h2>Excluir Cliente por CPF</h2>
+        <form id="excluirClienteForm">
+            <input type="text" id="cpfExcluir" placeholder="Digite o CPF do cliente" maxlength="14" required />
+            <button type="submit">Excluir Cliente</button>
+        </form>
     </section>
 
     <script src="escola.js"></script>
