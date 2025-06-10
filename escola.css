@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background:#4caf50;
+    background:white;
     color: #333;
     line-height: 1.6;
     font-size: 16px;
@@ -19,7 +19,7 @@ header {
     background: #4caf50;
     display: flex;
     align-items: center;
-    padding-left: 60px; /* espaço para o botão */
+    padding-left: 60px; 
     color: blck;
     z-index: 1100;
     transition: margin-left 0.3s ease;
@@ -38,11 +38,11 @@ header.shifted {
     border: none;
     color: black;
     cursor: pointer;
-    z-index: 1101; /* acima da sidebar */
+    z-index: 1101; 
   }
   
   header.shifted {
-    margin-left: 200px; /* move junto com o main */
+    margin-left: 200px;
   }
 
 h1 {
@@ -56,11 +56,11 @@ h1 {
     left: 0;
     width: 200px;
     height: 100vh;
-    background: white;
+    background: #4caf50;
     border-right: 1px solid #4caf50;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    z-index: 1000; /* abaixo do botão */
+    z-index: 1000;
   }
 
 .sidebar.show {
