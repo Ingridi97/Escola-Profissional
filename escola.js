@@ -17,8 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     menuToggle.addEventListener("click", () => {
         sidebar.classList.toggle("show");
-        mainContent.classList.toggle("shifted", sidebar.classList.contains("show"));
+        const isShow = sidebar.classList.contains("show");
+        mainContent.classList.toggle("shifted", isShow);
+        document.querySelector("header").classList.toggle("shifted", isShow);
     });
+    
 
     const cpfInputs = [document.getElementById("clienteCPF"), document.getElementById("cpfBusca")];
     cpfInputs.forEach((input) => {
@@ -138,7 +141,6 @@ function registrarVenda(e) {
 
     const cliente = clientes[clienteIndex];
 
-    // Checar se cliente já tem venda para o mesmo curso e período (seu código atual)
     const vendaMesmoCurso = vendas.some(
         (v) => v.cpf === cliente.cpf && v.curso === cursoNome && v.periodo === periodo
     );
@@ -147,7 +149,6 @@ function registrarVenda(e) {
         return;
     }
 
-    // NOVO: checar se cliente já tem alguma venda em outro curso no mesmo período
     const vendaMesmoPeriodo = vendas.some(
         (v) => v.cpf === cliente.cpf && v.periodo === periodo && v.curso !== cursoNome
     );

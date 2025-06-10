@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background: #f9f9f9;
+    background:#4caf50;
     color: #333;
     line-height: 1.6;
     font-size: 16px;
@@ -11,27 +11,39 @@ body {
 }
 
 header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #4caf50;
     display: flex;
     align-items: center;
-    background: #4caf50;
-    padding: 10px 15px;
-    color: white;
+    padding-left: 60px; /* espaço para o botão */
+    color: blck;
+    z-index: 1100;
+    transition: margin-left 0.3s ease;
+  }
+
+header.shifted {
+    margin-left: 200px; 
 }
 
 #menuToggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    font-size: 28px;
     background: transparent;
     border: none;
-    font-size: 28px;
-    color: white;
+    color: black;
     cursor: pointer;
-    margin-right: 15px;
-    padding: 0;
-    line-height: 1;
-}
-
-#menuToggle:focus {
-    outline: 2px solid #fff;
-}
+    z-index: 1101; /* acima da sidebar */
+  }
+  
+  header.shifted {
+    margin-left: 200px; /* move junto com o main */
+  }
 
 h1 {
     margin: 0;
@@ -40,17 +52,16 @@ h1 {
 
 .sidebar {
     position: fixed;
-    top: 50px;
+    top: 0;
     left: 0;
     width: 200px;
-    height: calc(100vh - 50px);
-    background: #fff;
-    border-right: 1px solid #ddd;
-    overflow-y: auto;
+    height: 100vh;
+    background: white;
+    border-right: 1px solid #4caf50;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    z-index: 1000;
-}
+    z-index: 1000; /* abaixo do botão */
+  }
 
 .sidebar.show {
     transform: translateX(0);
@@ -78,19 +89,20 @@ h1 {
 .sidebar ul li a:hover,
 .sidebar ul li a.active {
     background: #4caf50;
-    color: white;
+    color: #4caf50;
 }
 
 main {
     margin-left: 0;
-    padding: 20px 15px;
+    padding: 70px 15px 20px 15px; 
     transition: margin-left 0.3s ease;
-    min-height: calc(100vh - 50px);
+    min-height: calc(100vh - 70px);
 }
 
 main.shifted {
-    margin-left: 200px;
+    margin-left: 200px; 
 }
+
 
 .tab-content {
     display: none;
