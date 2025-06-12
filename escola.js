@@ -11,6 +11,8 @@ const ERROS = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+    carregarDados();
+
     const sidebar = document.getElementById("sidebar");
     const menuToggle = document.getElementById("menuToggle");
     const mainContent = document.getElementById("mainContent");
@@ -92,8 +94,11 @@ function cadastrarCurso(e) {
         valor: parseFloat(valor).toFixed(2).replace(".", ","),
     });
 
+    salvarDados();
     atualizarCursos();
     limparFormCurso();
+    mostrarMensagem("Curso cadastrado com sucesso!");
+
 }
 
 function cadastrarCliente(e) {
@@ -109,9 +114,10 @@ function cadastrarCliente(e) {
         cliente = { nome, cpf: cpfLimpo };
         clientes.push(cliente);
     }
-
+    salvarDados();
     atualizarClientes();
     limparFormCliente();
+    mostrarMensagem("Cliente cadastrado com sucesso!");
 }
 
 function registrarVenda(e) {
@@ -164,7 +170,10 @@ function registrarVenda(e) {
         periodo,
     });
 
+    salvarDados();
     limparFormVenda();
+    mostrarMensagem("Venda registrada com sucesso!");
+
 }
 
 
@@ -276,4 +285,25 @@ function limparFormVenda() {
     document.getElementById("cursoInputVenda").value = "";
     document.getElementById("periodoVenda").value = "";
     document.getElementById("periodoVenda").classList.remove("error");
+}
+
+
+function mostrarMensagem(msg) {
+    alert(msg);
+}
+
+function salvarDados() {
+    localStorage.setItem("cursos", JSON.stringify(cursos));
+    localStorage.setItem("clientes", JSON.stringify(clientes));
+    localStorage.setItem("vendas", JSON.stringify(vendas));
+}
+
+function carregarDados() {
+    const cursosSalvos = localStorage.getItem("cursos");
+    const clientesSalvos = localStorage.getItem("clientes");
+    const vendasSalvas = localStorage.getItem("vendas");
+
+    if (cursosSalvos) cursos.push(...JSON.parse(cursosSalvos));
+    if (clientesSalvos) clientes.push(...JSON.parse(clientesSalvos));
+    if (vendasSalvas) vendas.push(...JSON.parse(vendasSalvas));
 }

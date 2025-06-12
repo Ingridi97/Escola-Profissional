@@ -20,17 +20,17 @@ header {
     display: flex;
     align-items: center;
     padding-left: 60px; 
-    color: blck;
+    color: black;
     z-index: 1100;
     transition: margin-left 0.3s ease;
-  }
+}
 
 header.shifted {
     margin-left: 200px; 
 }
 
 #menuToggle {
-    position: fixed;
+    position: absolute;
     top: 15px;
     left: 15px;
     font-size: 28px;
@@ -38,12 +38,8 @@ header.shifted {
     border: none;
     color: black;
     cursor: pointer;
-    z-index: 1101; 
-  }
-  
-  header.shifted {
-    margin-left: 200px;
-  }
+    z-index: 1200; 
+}
 
 h1 {
     margin: 0;
@@ -57,11 +53,11 @@ h1 {
     width: 200px;
     height: 100vh;
     background: #4caf50;
-    border-right: 1px solid #4caf50;
-    transform: translateX(-100%);
+    z-index: 1000; 
     transition: transform 0.3s ease;
-    z-index: 1000;
-  }
+    transform: translateX(-100%);
+}
+
 
 .sidebar.show {
     transform: translateX(0);
@@ -86,10 +82,10 @@ h1 {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-.sidebar ul li a:hover,
-.sidebar ul li a.active {
-    background: #4caf50;
-    color: #4caf50;
+.sidebar ul li a.active,
+.sidebar ul li a:hover {
+    background: #388e3c;
+    color: white;
 }
 
 main {
@@ -105,16 +101,19 @@ main.shifted {
 
 
 .tab-content {
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    height: 0;
+    overflow: hidden;
 }
 
 .tab-content.active {
-    display: block;
-    background: white;
-    padding: 15px;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    opacity: 1;
+    visibility: visible;
+    height: auto;
 }
+
 
 form {
     display: flex;
@@ -220,13 +219,22 @@ form button:focus {
 }
 
 input.error,
+
 select.error {
     border-color: red !important;
     box-shadow: 0 0 6px rgba(255,0,0,0.7) !important;
 }
 
-@media (min-width: 600px) {
+@media (max-width: 599px) {
+    .sidebar {
+        width: 100%;
+    }
+
     main.shifted {
-        margin-left: 200px;
+        margin-left: 0;
+    }
+
+    header.shifted {
+        margin-left: 0;
     }
 }
