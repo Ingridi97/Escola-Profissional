@@ -57,6 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             sidebar.classList.remove("show");
             mainContent.classList.remove("shifted");
+
+            document.querySelector("header").classList.remove("shifted");
+
         });
     });
 
